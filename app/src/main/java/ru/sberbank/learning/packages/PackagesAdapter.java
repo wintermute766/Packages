@@ -1,8 +1,10 @@
 package ru.sberbank.learning.packages;
 
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.List;
 
@@ -61,15 +64,13 @@ public class PackagesAdapter extends BaseAdapter {
 
         PackageManager pm = parent.getContext().getPackageManager();
 
-        if (packageInfo.applicationInfo != null) {
-            CharSequence label = packageInfo.applicationInfo.loadLabel(pm);
-            holder.title.setText(label);
+        holder.title.setText(packageInfo.packageName);
+        holder.icon.setImageResource(R.mipmap.ic_launcher);
 
-            Drawable icon = pm.getApplicationIcon(packageInfo.applicationInfo);
-            holder.icon.setImageDrawable(icon);
-        } else {
-            holder.title.setText(packageInfo.packageName);
-            holder.icon.setImageResource(R.mipmap.ic_launcher);
+        if (packageInfo.applicationInfo != null) {
+            LoadInfoTask loadInfoTask = new
+                    LoadInfoTask(packageInfo, pm, holder.icon, holder.title);
+            loadInfoTask.execute();
         }
 
         holder.subtitle.setText(packageInfo.packageName);
@@ -81,6 +82,66 @@ public class PackagesAdapter extends BaseAdapter {
         private ImageView icon;
         private TextView title;
         private TextView subtitle;
+    }
 
+    private static class LoadInfoTask extends AsyncTask<Void, Void, ProcessInfo> {
+
+        private PackageInfo packageInfo;
+        private PackageManager packageManager;
+
+        private WeakReference<ImageView> imageRef;
+        private WeakReference<TextView> textRef;
+
+        public LoadInfoTask(PackageInfo packageInfo, PackageManager packageManager,
+                            ImageView imageTarget, TextView textTarget) {
+            this.packageInfo = packageInfo;
+            this.packageManager = packageManager;
+
+            imageRef = new WeakReference<>(imageTarget);
+            textRef = new WeakReference<>(textTarget);
+            imageTarget.setTag(packageInfo.packageName);
+
+        }
+
+        @Override
+        protected ProcessInfo doInBackground(Void... params) {
+            Drawable icon = packageManager
+                    .getApplicationIcon(packageInfo.applicationInfo);
+            CharSequence label = packageInfo.applicationInfo.loadLabel(packageManager);
+
+            return new ProcessInfo(icon, label);
+        }
+
+        @Override
+        protected void onPostExecute(ProcessInfo processInfo) {
+            ImageView imageView = imageRef.get();
+            TextView textView = textRef.get();
+
+            if (imageView == null || textView == null ||
+                    !packageInfo.packageName.equals(imageView.getTag().toString())) {
+                return;
+            }
+
+            imageView.setImageDrawable(processInfo.getIcon());
+            textView.setText(processInfo.getTitle());
+        }
+    }
+
+    static class ProcessInfo {
+        private Drawable icon;
+        private CharSequence title;
+
+        public ProcessInfo(Drawable icon, CharSequence title) {
+            this.icon = icon;
+            this.title = title;
+        }
+
+        public Drawable getIcon() {
+            return icon;
+        }
+
+        public CharSequence getTitle() {
+            return title;
+        }
     }
 }
