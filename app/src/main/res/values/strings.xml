@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Packages</string>
+    <string name="message_cannot_be_launched"> Пакет %s не поддерживает запуск</string>
 </resources>
