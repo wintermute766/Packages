@@ -19,20 +19,20 @@ import java.util.List;
 
 public class PackagesAdapter extends BaseAdapter {
 
-    private List<PackageInfo> packageInfoList;
+    private List<PackageInfo> packages;
 
-    public PackagesAdapter(List<PackageInfo> packageInfoList) {
-        this.packageInfoList = Collections.unmodifiableList(packageInfoList);
+    public PackagesAdapter(List<PackageInfo> packages) {
+        this.packages = Collections.unmodifiableList(packages);
     }
 
     @Override
     public int getCount() {
-        return packageInfoList.size();
+        return packages.size();
     }
 
     @Override
-    public  PackageInfo getItem(int position) {
-        return null;
+    public PackageInfo getItem(int position) {
+        return packages.get(position);
     }
 
     @Override
