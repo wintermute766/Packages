@@ -1,6 +1,8 @@
 package ru.sberbank.learning.packages;
 
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,9 +59,20 @@ public class PackagesAdapter extends BaseAdapter {
         ViewHolder holder = (ViewHolder) view.getTag();
         PackageInfo packageInfo = getItem(position);
 
-        holder.title.setText(packageInfo.packageName);
+        PackageManager pm = parent.getContext().getPackageManager();
+
+        if (packageInfo.applicationInfo != null) {
+            CharSequence label = packageInfo.applicationInfo.loadLabel(pm);
+            holder.title.setText(label);
+
+            Drawable icon = pm.getApplicationIcon(packageInfo.applicationInfo);
+            holder.icon.setImageDrawable(icon);
+        } else {
+            holder.title.setText(packageInfo.packageName);
+            holder.icon.setImageResource(R.mipmap.ic_launcher);
+        }
+
         holder.subtitle.setText(packageInfo.packageName);
-        holder.icon.setImageResource(R.mipmap.ic_launcher);
 
         return view;
     }

@@ -6,11 +6,11 @@
 
     <ImageView
         android:id="@+id/package_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="@dimen/padding"
         android:layout_marginTop="@dimen/package_margin"
         android:layout_marginBottom="@dimen/package_margin"
-        android:padding="@dimen/padding"
         android:src="@mipmap/ic_launcher"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
@@ -21,8 +21,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/padding"
-        android:layout_centerVertical="true"
+        android:layout_alignParentTop="true"
         android:layout_toRightOf="@id/package_icon"
+        android:textAppearance="@style/Title"
         tools:text="Package name"/>
 
     <TextView

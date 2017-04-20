@@ -5,4 +5,8 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="Title" parent="android:TextAppearance.Holo.Large">
+        <item name="android:textSize">24sp</item>
+    </style>
+
 </resources>
