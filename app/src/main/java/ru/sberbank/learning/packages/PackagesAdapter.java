@@ -1,5 +1,6 @@
 package ru.sberbank.learning.packages;
 
+import android.content.ClipData;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -75,6 +76,8 @@ public class PackagesAdapter extends BaseAdapter {
 
         holder.subtitle.setText(packageInfo.packageName);
 
+
+
         return view;
     }
 
@@ -142,6 +145,20 @@ public class PackagesAdapter extends BaseAdapter {
 
         public CharSequence getTitle() {
             return title;
+        }
+    }
+
+    private static abstract class Item {
+        private int type;
+
+        public abstract View getView(int position,
+                                     View convertView, ViewGroup parent);
+    }
+
+    private static class HeaderItem extends Item {
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            return null;
         }
     }
 }
